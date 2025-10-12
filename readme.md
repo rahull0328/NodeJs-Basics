@@ -177,3 +177,90 @@ node app.js
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Explain the concept of URL module in Node.js?
+
+The URL module in Node.js splits up a web address into readable parts. Use `require()` to include the module. Then parse an address with the `url.parse()` method, and it will return a URL object with each part of the address as properties.
+
+**Example:**
+
+```js
+/**
+ * URL Module in Node.js
+ */
+const url = require('url');
+const adr = 'http://localhost:8080/default.htm?year=2022&month=september';
+const q = url.parse(adr, true);
+
+console.log(q.host); // localhost:8080
+console.log(q.pathname); // "/default.htm"
+console.log(q.search); // "?year=2022&month=september"
+
+const qdata = q.query; // { year: 2022, month: 'september' }
+console.log(qdata.month); // "september"
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## # 3. NODE.JS DATA TYPES
+
+<br/>
+
+## Q. What are the data types in Node.js?
+
+Just like JS, there are two categories of data types in Node: Primitives and Objects.
+
+**1. Primitives:**
+
+* String
+* Number
+* BigInt
+* Boolean
+* Undefined
+* Null
+* Symbol
+
+**2. Objects:**
+
+* Function
+* Array
+* Buffer
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain String data type in Node.js?
+
+Strings in Node.js are sequences of unicode characters. Strings can be wrapped in a single or double quotation marks.
+Javascript provide many functions to operate on string, like indexOf(), split(), substr(), length.
+
+**String functions:**
+
+|Function   | Description               |
+|-----------|---------------------------|
+|charAt()   |It is useful to find a specific character present in a string.|
+|concat()   |It is useful to concat more than one string.|
+|indexOf()  |It is useful to get the index of a specified character or a part of the string.|
+|match()    |It is useful to match multiple strings.|
+|split()    |It is useful to split the string and return an array of string.|
+|join()     |It is useful to join the array of strings and those are separated by comma (,) operator.|
+
+**Example:**
+
+```js
+/** 
+ * String Data Type
+ */
+const str1 = "Hello";
+const str2 = 'World';
+
+console.log("Concat Using (+) :" , (str1 + ' ' + str2));
+console.log("Concat Using Function :" , (str1.concat(str2)));
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
