@@ -264,3 +264,89 @@ console.log("Concat Using Function :" , (str1.concat(str2)));
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Explain Number data type in Node.js?
+
+The number data type in Node.js is 64 bits floating point number both positive and negative. The parseInt() and parseFloat() functions are used to convert to number, if it fails to convert into a number then it returns `NaN`.
+
+**Example:**
+
+```js
+/**
+ * Number Data Type
+ */
+// Example 01:
+const num1 = 10;
+const num2 = 20;
+
+console.log(`sum: ${num1 + num2}`); 
+
+// Example 02:
+console.log(parseInt("32"));  // 32
+console.log(parseFloat("8.24")); // 8.24
+console.log(parseInt("234.12345")); // 234
+console.log(parseFloat("10")); // 10
+
+// Example 03:
+console.log(isFinite(10/5)); // true
+console.log(isFinite(10/0)); // false
+
+// Example 04:
+console.log(5 / 0); // Infinity
+console.log(-5 / 0); // -Infinity
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain BigInt data type in Node.js?
+
+A BigInt value, also sometimes just called a BigInt, is a bigint primitive, created by appending **n** to the end of an integer literal, or by calling the BigInt() function ( without the new operator ) and giving it an integer value or string value.
+
+**Example:**
+
+```js
+/**
+ * BigInt Data Type
+ */
+const maxSafeInteger = 99n; // This is a BigInt
+const num2 = BigInt('99'); // This is equivalent
+const num3 = BigInt(99); // Also works
+
+typeof 1n === 'bigint'           // true
+typeof BigInt('1') === 'bigint'  // true
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain Boolean data type in Node.js?
+
+Boolean data type is a data type that has one of two possible values, either true or false. In programming, it is used in logical representation or to control program structure.
+
+The boolean() function is used to convert any data type to a boolean value. According to the rules, false, 0, NaN, null, undefined, empty string evaluate to false and other values evaluates to true.
+
+**Example:**
+
+```js
+/**
+ * Boolean Data Type
+ */
+// Example 01:
+const isValid = true; 
+console.log(isValid); // true 
+
+// Example 02:
+console.log(true && true); // true 
+console.log(true && false); // false 
+console.log(true || false); // true 
+console.log(false || false); // false 
+console.log(!true); // false 
+console.log(!false); // true 
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
