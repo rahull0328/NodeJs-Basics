@@ -350,3 +350,91 @@ console.log(!false); // true
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Explain `Undefined` and `Null` data type in Node.js?
+
+In node.js, if a variable is defined without assigning any value, then that will take **undefined** as value. If we assign a null value to the variable, then the value of the variable becomes **null**.
+
+**Example:**
+
+```js
+/**
+ * NULL and UNDEFINED Data Type
+ */
+let x;
+console.log(x); // undefined
+
+let y = null;
+console.log(y); // null
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain Symbol data type in Node.js?
+
+Symbol is an immutable primitive value that is unique. It\'s a very peculiar data type. Once you create a symbol, its value is kept private and for internal use.
+
+**Example:**
+
+```js
+/**
+ * Symbol Data Type
+ */
+const NAME = Symbol()
+const person = {
+  [NAME]: 'Ritika Bhavsar'
+}
+
+person[NAME] // 'Ritika Bhavsar'
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain function in Node.js?
+
+Functions are first class citizens in Node\'s JavaScript, similar to the browser\'s JavaScript. A function can have attributes and properties also. It can be treated like a class in JavaScript.
+
+**Example:**
+
+```js
+/**
+ * Function in Node.js
+ */
+function Messsage(name) {
+ console.log("Hello "+name);
+}
+
+Messsage("World"); // Hello World
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain Buffer data type in Node.js?
+
+Node.js includes an additional data type called Buffer ( not available in browser\'s JavaScript ). Buffer is mainly used to store **binary data**, while reading from a file or receiving packets over the network.
+
+**Example:**
+
+```js
+/**
+ * Buffer Data Type
+ */
+let b = new Buffer(10000);
+let str = "----------";
+
+b.write(str); 
+console.log( str.length ); // 10
+console.log( b.length ); // 10000
+```
+
+*Note: Buffer() is deprecated due to security and usability issues.*
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
