@@ -438,3 +438,171 @@ console.log( b.length ); // 10000
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## # 4. NODE.JS ARCHITECTURE
+
+<br/>
+
+## Q. How does Node.js works?
+
+Node.js is completely event-driven. Basically the server consists of one thread processing one event after another.
+
+A new request coming in is one kind of event. The server starts processing it and when there is a blocking IO operation, it does not wait until it completes and instead registers a callback function. The server then immediately starts to process another event ( maybe another request ). When the IO operation is finished, that is another kind of event, and the server will process it ( i.e. continue working on the request ) by executing the callback as soon as it has time.
+
+Node.js Platform does not follow Request/Response Multi-Threaded Stateless Model. It follows Single Threaded with Event Loop Model. Node.js Processing model mainly based on Javascript Event based model with Javascript callback mechanism.  
+
+<p align="center">
+  <img src="assets/event-loop.png" alt="Node Architecture" width="800px" />
+</p>
+  
+**Single Threaded Event Loop Model Processing Steps:**
+
+* Clients Send request to Web Server.
+* Node.js Web Server internally maintains a Limited Thread pool to provide services to the Client Requests.
+* Node.js Web Server receives those requests and places them into a Queue. It is known as **Event Queue**.
+* Node.js Web Server internally has a Component, known as **Event Loop**. Why it got this name is that it uses indefinite loop to receive requests and process them.
+* Event Loop uses Single Thread only. It is main heart of Node.js Platform Processing Model.
+* Event Loop checks any Client Request is placed in Event Queue. If no, then wait for incoming requests for indefinitely.
+* If yes, then pick up one Client Request from Event Queue
+    * Starts process that Client Request
+    * If that Client Request Does Not requires any Blocking IO Operations, then process everything, prepare response and send it back to client.
+    * If that Client Request requires some Blocking IO Operations like interacting with Database, File System, External Services then it will follow different approach
+        * Checks Threads availability from Internal Thread Pool
+        * Picks up one Thread and assign this Client Request to that thread.
+        * That Thread is responsible for taking that request, process it, perform Blocking IO operations, prepare response and send it back to the Event Loop
+        * Event Loop in turn, sends that Response to the respective Client.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are the core modules of Node.js?
+
+Node.js has a set of core modules that are part of the platform and come with the Node.js installation. These modules can be loaded into the program by using the require function.
+
+**Syntax:**
+
+```js
+const module = require('module_name');
+```
+
+**Example:**
+
+```js
+const http = require('http');
+
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('Welcome to Node.js!');
+  res.end();
+}).listen(3000);
+```
+
+The following table lists some of the important core modules in Node.js.
+
+|Name         |Description                                             |
+|-------------|--------------------------------------------------------|
+|Assert       |It is used by Node.js for testing itself. It can be accessed with require('assert').|
+|Buffer       |It is used to perform operations on raw bytes of data which reside in memory. It can be accessed with require('buffer')|
+|Child Process|It is used by node.js for managing child processes. It can be accessed with require('child_process').|
+|Cluster      |This module is used by Node.js to take advantage of multi-core systems, so that it can handle more load. It can be accessed with require('cluster').|
+|Console      |It is used to write data to console. Node.js has a Console object which contains functions to write data to console. It can be accessed with require('console'). |
+|Crypto       |It is used to support cryptography for encryption and decryption. It can be accessed with require('crypto').|
+|HTTP         |It includes classes, methods and events to create Node.js http server.|
+|URL          |It includes methods for URL resolution and parsing.|
+|Query String |It includes methods to deal with query string.|
+|Path         |It includes methods to deal with file paths.|
+|File System  |It includes classes, methods, and events to work with file I/O.|
+|Util         |It includes utility functions useful for programmers.|
+|Zlib         |It is used to compress and decompress data. It can be accessed with require('zlib').|
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What do you understand by Reactor Pattern in Node.js?
+
+**Reactor Pattern** is used to avoid the blocking of the Input/Output operations. It provides us with a handler that is associated with I/O operations. When the I/O requests are to be generated, they get submitted to a demultiplexer, which handles concurrency in avoiding the blocking of the I/O mode and collects the requests in form of an event and queues those events.
+
+**There are two ways in which I/O operations are performed:**
+
+**1. Blocking I/O:** Application will make a function call and pause its execution at a point until the data is received. It is called as "Synchronous".
+
+**2. Non-Blocking I/O:** Application will make a function call, and, without waiting for the results it continues its execution. It is called as "Asynchronous".
+
+<p align="center">
+  <img src="/assets/reactor-pattern.jpg" alt="Reactor Pattern" width="600px" />
+</p>
+
+**Reactor Pattern comprises of:**
+
+**1. Resources:** They are shared by multiple applications for I/O operations, generally slower in executions.
+
+**2. Synchronous Event De-multiplexer/Event Notifier:** This uses Event Loop for blocking on all resources. When a set of I/O operations completes, the Event De-multiplexer pushes the new events into the Event Queue.
+
+**3. Event Loop and Event Queue:** Event Queue queues up the new events that occurred along with its event-handler, pair.
+
+**4. Request Handler/Application:** This is, generally, the application that provides the handler to be executed for registered events on resources.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are the global objects of Node.js?
+
+Node.js Global Objects are the objects that are available in all modules. Global Objects are built-in objects that are part of the JavaScript and can be used directly in the application without importing any particular module.
+
+These objects are modules, functions, strings and object itself as explained below.
+
+**1. global:**
+
+It is a global namespace. Defining a variable within this namespace makes it globally accessible.
+
+```js
+var myvar;
+```
+
+**2. process:**
+
+It is an inbuilt global object that is an instance of EventEmitter used to get information on current process. It can also be accessed using require() explicitly.
+
+**3. console:**
+
+It is an inbuilt global object used to print to stdout and stderr.
+
+```js
+console.log("Hello World"); // Hello World
+```
+
+**4. setTimeout(), clearTimeout(), setInterval(), clearInterval():**
+
+The built-in timer functions are globals
+
+```js
+function printHello() {
+   console.log( "Hello, World!");
+}
+
+// Now call above function after 2 seconds
+var timeoutObj = setTimeout(printHello, 2000);
+```
+
+**5. __dirname:**
+
+It is a string. It specifies the name of the directory that currently contains the code.
+
+```js
+console.log(__dirname);
+```
+
+**6. __filename:**
+
+It specifies the filename of the code being executed. This is the resolved absolute path of this code file. The value inside a module is the path to that module file.
+
+```js
+console.log(__filename);
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
