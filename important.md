@@ -212,3 +212,117 @@ http.createServer(function (req, res) {
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How many types of streams are present in node.js?
+
+Streams are objects that let you read data from a source or write data to a destination in continuous fashion.
+There are four types of streams
+
+* **Readable** − Stream which is used for read operation.
+* **Writable** − Stream which is used for write operation.
+* **Duplex** − Stream which can be used for both read and write operation.
+* **Transform** − A type of duplex stream where the output is computed based on input.  
+
+Each type of Stream is an EventEmitter instance and throws several events at different instance of times.  
+
+**Example:**
+
+* **data** − This event is fired when there is data is available to read.
+* **end** − This event is fired when there is no more data to read.
+* **error** − This event is fired when there is any error receiving or writing data.
+* **finish** − This event is fired when all the data has been flushed to underlying system. 
+
+**1. Reading from a Stream:**
+
+```js
+const fs = require("fs");
+const data = '';
+
+// Create a readable stream
+const readerStream = fs.createReadStream('input.txt');
+
+// Set the encoding to be utf8. 
+readerStream.setEncoding('UTF8');
+
+// Handle stream events --> data, end, and error
+readerStream.on('data', function(chunk) {
+   data += chunk;
+});
+
+readerStream.on('end',function() {
+   console.log(data);
+});
+
+readerStream.on('error', function(err) {
+   console.log(err.stack);
+});
+
+console.log("Program Ended");
+```
+
+**2. Writing to a Stream:**
+
+```js
+const fs = require("fs");
+const data = 'Simply Easy Learning';
+
+// Create a writable stream
+const writerStream = fs.createWriteStream('output.txt');
+
+// Write the data to stream with encoding to be utf8
+writerStream.write(data,'UTF8');
+
+// Mark the end of file
+writerStream.end();
+
+// Handle stream events --> finish, and error
+writerStream.on('finish', function() {
+   console.log("Write completed.");
+});
+
+writerStream.on('error', function(err) {
+   console.log(err.stack);
+});
+
+console.log("Program Ended");
+```
+
+**3. Piping the Streams:**
+
+Piping is a mechanism where we provide the output of one stream as the input to another stream. It is normally used to get data from one stream and to pass the output of that stream to another stream. There is no limit on piping operations.
+
+```js
+const fs = require("fs");
+
+// Create a readable stream
+const readerStream = fs.createReadStream('input.txt');
+
+// Create a writable stream
+const writerStream = fs.createWriteStream('output.txt');
+
+// Pipe the read and write operations
+// read input.txt and write data to output.txt
+readerStream.pipe(writerStream);
+
+console.log("Program Ended");
+```
+
+**4. Chaining the Streams:**
+
+Chaining is a mechanism to connect the output of one stream to another stream and create a chain of multiple stream operations. It is normally used with piping operations.  
+
+```js
+const fs = require("fs");
+const zlib = require('zlib');
+
+// Compress the file input.txt to input.txt.gz
+fs.createReadStream('input.txt')
+   .pipe(zlib.createGzip())
+   .pipe(fs.createWriteStream('input.txt.gz'));
+  
+console.log("File Compressed.");
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
