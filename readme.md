@@ -681,3 +681,150 @@ status 200 and ok
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How does the EventEmitter works in Node.js?
+
+* Event Emitter emits the data in an event called message
+* A Listened is registered on the event message
+* when the message event emits some data, the listener will get the data
+
+<p align="center">
+  <img src="assets/eventEmitter_works.png" alt="EventEmitter" width="400px" />
+</p>
+
+**Building Blocks:**
+
+* **.emit()** - this method in event emitter is to emit an event in module
+* **.on()** - this method is to listen to data on a registered event in node.js
+* **.once()** - it listen to data on a registered event only once.
+* **.addListener()** - it checks if the listener is registered for an event.
+* **.removeListener()** - it removes the listener for an event.
+
+<p align="center">
+  <img src="assets/eventemiitter.png" alt="Building Blocks" width="400px" />
+</p>
+
+**Example 01:**
+
+```js
+/**
+ * Callbacks Events
+ */
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
+
+function listenerOne() {
+   console.log('First Listener Executed');
+}
+
+function listenerTwo() {
+   console.log('Second Listener Executed');
+}
+
+eventEmitter.on('listenerOne', listenerOne); // Register for listenerOne
+eventEmitter.on('listenerOne', listenerTwo); // Register for listenerOne
+
+// When the event "listenerOne" is emitted, both the above callbacks should be invoked.
+eventEmitter.emit('listenerOne');
+
+// Output
+First Listener Executed
+Second Listener Executed
+```
+
+**Example 02:**
+
+```js
+/**
+ * Emit Events Once
+ */
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
+
+function listenerOnce() {
+   console.log('listenerOnce fired once');
+}
+
+eventEmitter.once('listenerOne', listenerOnce); // Register listenerOnce
+eventEmitter.emit('listenerOne');
+
+// Output
+listenerOnce fired once
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are the EventEmitter methods available in Node.js?
+
+|EventEmitter Methods | Description         |
+|---------------------|---------------------|
+|.addListener(event, listener) |Adds a listener to the end of the listeners array for the specified event.|
+|.on(event, listener) |Adds a listener to the end of the listeners array for the specified event. It can also be called as an alias of emitter.addListener()|
+|.once(event, listener)|This listener is invoked only the next time the event is fired, after which it is removed.|
+|.removeListener(event, listener)|Removes a listener from the listener array for the specified event.|
+|.removeAllListeners([event])|Removes all listeners, or those of the specified event.|
+|.setMaxListeners(n)  |By default EventEmitters will print a warning if more than 10 listeners are added for a particular event.|
+|.getMaxListeners()   |Returns the current maximum listener value for the emitter which is either set by emitter.setMaxListeners(n) or defaults to EventEmitter.defaultMaxListeners.|
+|.listeners(event)    |Returns a copy of the array of listeners for the specified event.|
+|.emit(event[, arg1][, arg2][, ...]) |Raise the specified events with the supplied arguments.|
+|.listenerCount(type) |Returns the number of listeners listening to the type of event.|
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How the Event Loop Works in Node.js?
+
+The **event loop** allows Node.js to perform non-blocking I/O operations despite the fact that JavaScript is single-threaded. It is done by offloading operations to the system kernel whenever possible.
+
+Node.js is a single-threaded application, but it can support **concurrency** via the concept of **event** and **callbacks**. Every API of Node.js is asynchronous and being single-threaded, they use **async function calls** to maintain concurrency. Node uses observer pattern. Node thread keeps an event loop and whenever a task gets completed, it fires the corresponding event which signals the event-listener function to execute.
+
+**Features of Event Loop:**
+
+* Event loop is an endless loop, which waits for tasks, executes them and then sleeps until it receives more tasks.
+* The event loop executes tasks from the event queue only when the call stack is empty i.e. there is no ongoing task.
+* The event loop allows us to use callbacks and promises.
+* The event loop executes the tasks starting from the oldest first.
+
+<p align="center">
+  <img src="assets/nodejs-event-loop.png" alt="Event Loop" width="600px" />
+</p>
+
+**Example:**
+
+```js
+/**
+ * Event loop in Node.js
+ */
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
+
+// Create an event handler as follows
+const connectHandler = function connected() {
+   console.log('connection succesful.');
+   eventEmitter.emit('data_received');
+}
+
+// Bind the connection event with the handler
+eventEmitter.on('connection', connectHandler);
+ 
+// Bind the data_received event with the anonymous function
+eventEmitter.on('data_received', function() {
+   console.log('data received succesfully.');
+});
+
+// Fire the connection event 
+eventEmitter.emit('connection');
+console.log("Program Ended.");
+
+// Output
+Connection succesful.
+Data received succesfully.
+Program Ended.
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
