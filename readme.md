@@ -828,3 +828,163 @@ Program Ended.
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How are event listeners created in Node.JS?
+
+An array containing all eventListeners is maintained by Node. Each time **.on()** function is executed, a new event listener is added to that array. When the concerned event is emitted, each **eventListener** that is present in the array is called in a sequential or synchronous manner.
+
+The event listeners are called in a synchronous manner to avoid logical errors, race conditions etc. The total number of listeners that can be registered for a particular event, is controlled by **.setMaxListeners(n)**. The default number of listeners is 10.
+
+```js
+emitter.setMaxlisteners(12);
+```
+
+As an event Listener once registered, exists throughout the life cycle of the program. It is important to detach an event Listener once its no longer needed to avoid memory leaks. Functions like **.removeListener()**, **.removeAllListeners()** enable the removal of listeners from the listeners Array.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is the difference between process.nextTick() and setImmediate()?
+
+**1. process.nextTick():**
+
+The process.nextTick() method adds the callback function to the start of the next event queue. It is to be noted that, at the start of the program process.nextTick() method is called for the first time before the event loop is processed.
+
+**2. setImmediate():**
+
+The setImmediate() method is used to execute a function right after the current event loop finishes. It is callback function is placed in the check phase of the next event queue.
+
+**Example:**
+
+```js
+/**
+ * setImmediate() and process.nextTick()
+ */
+setImmediate(() => {
+  console.log("1st Immediate");
+});
+
+setImmediate(() => {
+  console.log("2nd Immediate");
+});
+
+process.nextTick(() => {
+  console.log("1st Process");
+});
+
+process.nextTick(() => {
+  console.log("2nd Process");
+});
+
+// First event queue ends here
+console.log("Program Started");
+
+// Output
+Program Started
+1st Process
+2nd Process
+1st Immediate
+2nd Immediate
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is callback function in Node.js?
+
+A callback is a function which is called when a task is completed, thus helps in preventing any kind of blocking and a callback function allows other code to run in the meantime.
+
+Callback is called when task get completed and is asynchronous equivalent for a function. Using Callback concept, Node.js can process a large number of requests without waiting for any function to return the result which makes Node.js highly scalable.
+
+**Example:**
+
+```js
+/**
+ * Callback Function
+ */
+function message(name, callback) {
+  console.log("Hi" + " " + name);
+  callback();
+}
+
+// Callback function
+function callMe() {
+  console.log("I am callback function");
+}
+
+// Passing function as an argument
+message("Node.JS", callMe);
+```
+
+**Output:**
+
+```js
+Hi Node.JS
+I am callback function
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are the difference between Events and Callbacks?
+
+**1. Events:**
+
+Node.js **events** module which emits named events that can cause corresponding functions or callbacks to be called. Functions ( callbacks ) listen or subscribe to a particular event to occur and when that event triggers, all the callbacks subscribed to that event are fired one by one in order to which they were registered.
+
+All objects that emit events are instances of the **EventEmitter** class. The event can be emitted or listen to an event with the help of EventEmitter
+
+**Example:**
+
+```js
+/**
+ * Events Module
+ */
+const event = require('events');  
+const eventEmitter = new event.EventEmitter();  
+  
+// add listener function for Sum event  
+eventEmitter.on('Sum', function(num1, num2) {  
+    console.log('Total: ' + (num1 + num2));  
+});  
+
+// call event  
+eventEmitter.emit('Sum', 10, 20);
+
+// Output
+Total: 30
+```
+
+**2. Callbacks:**
+
+A callback function is a function passed into another function as an argument, which is then invoked inside the outer function to complete some kind of routine or action.
+
+**Example:**
+
+```js
+/**
+ * Callbacks
+ */
+function sum(number) {
+  console.log('Total: ' + number);
+}
+
+function calculator(num1, num2, callback) {
+  let total = num1 + num2;
+  callback(total);
+}
+
+calculator(10, 20, sum);
+
+// Output
+Total: 30
+```
+
+Callback functions are called when an asynchronous function returns its result, whereas event handling works on the **observer pattern**. The functions that listen to events act as Observers. Whenever an event gets fired, its listener function starts executing. Node.js has multiple in-built events available through events module and EventEmitter class which are used to bind events and event-listeners
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
