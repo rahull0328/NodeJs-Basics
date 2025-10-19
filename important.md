@@ -326,3 +326,118 @@ console.log("File Compressed.");
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How to kill child processes that spawn their own child processes in Node.js?
+
+If a child process in Node.js spawn their own child processes, kill() method will not kill the child process\'s own child processes. For example, if I start a process that starts it\'s own child processes via child_process module, killing that child process will not make my program to quit.
+
+```js
+const spawn = require('child_process').spawn;
+const child = spawn('my-command');
+
+child.kill();
+```
+
+The program above will not quit if `my-command` spins up some more processes.
+
+**PID range hack:**
+
+We can start child processes with {detached: true} option so those processes will not be attached to main process but they will go to a new group of processes. Then using process.kill(-pid) method on main process we can kill all processes that are in the same group of a child process with the same pid group. In my case, I only have one processes in this group.
+
+```js
+const spawn = require('child_process').spawn;
+const child = spawn('my-command', {detached: true});
+
+process.kill(-child.pid);
+```
+
+Please note - before pid. This converts a pid to a group of pids for process kill() method.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to use JSON Web Token (JWT) for authentication in Node.js?
+
+JSON Web Token (JWT) is an open standard that defines a compact and self-contained way of securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.
+
+There are some advantages of using JWT for authorization:
+
+* Purely stateless. No additional server or infra required to store session information.
+* It can be easily shared among services.
+
+**Syntax:**
+
+```js
+jwt.sign(payload, secretOrPrivateKey, [options, callback])
+```
+
+* **Header** - Consists of two parts: the type of token (i.e., JWT) and the signing algorithm (i.e., HS512)
+* **Payload** - Contains the claims that provide information about a user who has been authenticated along with other information such as token expiration time.
+* **Signature** - Final part of a token that wraps in the encoded header and payload, along with the algorithm and a secret
+
+**Installation:**
+
+```js
+npm install jsonwebtoken bcryptjs --save
+```
+
+**Example**:
+
+```js
+/**
+ * AuthController.js
+ */
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
+const User = require('../user/User');
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
+
+
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
+
+router.post('/register', function(req, res) {
+  
+  let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  
+  User.create({
+    name : req.body.name,
+    email : req.body.email,
+    password : hashedPassword
+  },
+  function (err, user) {
+    if (err) return res.status(500).send("There was a problem registering the user.")
+    // create a token
+    let token = jwt.sign({ id: user._id }, config.secret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
+    res.status(200).send({ auth: true, token: token });
+  });
+});
+```
+
+**config.js:**
+
+```js
+/**
+ * config.js
+ */
+module.exports = {
+  'secret': 'supersecret'
+};
+```
+
+The `jwt.sign()` method takes a payload and the secret key defined in `config.js` as parameters. It creates a unique string of characters representing the payload. In our case, the payload is an object containing only the id of the user.
+
+**Reference:**
+
+* *[https://www.npmjs.com/package/jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)*
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
