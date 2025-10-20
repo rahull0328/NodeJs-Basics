@@ -988,3 +988,110 @@ Callback functions are called when an asynchronous function returns its result, 
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. What is an error-first callback?
+
+The pattern used across all the asynchronous methods in Node.js is called *Error-first Callback*. Here is an example:
+
+```js
+fs.readFile( "file.json", function ( err, data ) {
+  if ( err ) {
+    console.error( err );
+  }
+  console.log( data );
+});
+```
+
+Any asynchronous method expects one of the arguments to be a callback. The full callback argument list depends on the caller method, but the first argument is always an error object or null. When we go for the asynchronous method, an exception thrown during function execution cannot be detected in a try/catch statement. The event happens after the JavaScript engine leaves the try block.
+
+In the preceding example, if any exception is thrown during the reading of the file, it lands on the callback function as the first and mandatory parameter.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is callback hell in Node.js?
+
+The callback hell contains complex nested callbacks. Here, every callback takes an argument that is a result of the previous callbacks. In this way, the code structure looks like a pyramid, making it difficult to read and maintain. Also, if there is an error in one function, then all other functions get affected.
+
+An asynchronous function is one where some external activity must complete before a result can be processed; it is "asynchronous" in the sense that there is an unpredictable amount of time before a result becomes available. Such functions require a callback function to handle errors and process the result.
+
+**Example:**
+
+```js
+/**
+ * Callback Hell
+ */
+firstFunction(function (a) {
+  secondFunction(a, function (b) {
+    thirdFunction(b, function (c) {
+      // And so on…
+    });
+  });
+});
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to avoid callback hell in Node.js?
+
+**1. Managing callbacks using Async.js:**  
+
+`Async` is a really powerful npm module for managing asynchronous nature of JavaScript. Along with Node.js, it also works for JavaScript written for browsers.
+
+Async provides lots of powerful utilities to work with asynchronous processes under different scenarios.
+
+```js
+npm install --save async
+```
+
+**2. Managing callbacks hell using promises:**  
+
+Promises are alternative to callbacks while dealing with asynchronous code. Promises return the value of the result or an error exception. The core of the promises is the `.then()` function, which waits for the promise object to be returned.
+
+The `.then()` function takes two optional functions as arguments and depending on the state of the promise only one will ever be called. The first function is called when the promise if fulfilled (A successful result). The second function is called when the promise is rejected.
+
+**Example:**
+
+```js
+/**
+ * Promises
+ */
+const myPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("Successful!");
+  }, 300);
+});
+```
+
+**3. Using Async Await:**  
+
+Async await makes asynchronous code look like it\'s synchronous. This has only been possible because of the reintroduction of promises into node.js. Async-Await only works with functions that return a promise.
+
+**Example:**
+
+```js
+/**
+ * Async Await
+ */
+const getrandomnumber = function(){
+    return new Promise((resolve, reject)=>{
+        setTimeout(() => {
+            resolve(Math.floor(Math.random() * 20));
+        }, 1000);
+    });
+}
+
+const addRandomNumber = async function(){
+    const sum = await getrandomnumber() + await getrandomnumber();
+    console.log(sum);
+}
+
+addRandomNumber();
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
