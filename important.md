@@ -563,3 +563,176 @@ app.listen(3000);
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. What are the security mechanisms available in Node.js?
+
+**1. Helmet module:**
+
+[Helmet](https://www.npmjs.com/package/helmet) helps to secure your Express applications by setting various HTTP headers, like:
+
+* X-Frame-Options to mitigates clickjacking attacks,
+* Strict-Transport-Security to keep your users on HTTPS,
+* X-XSS-Protection to prevent reflected XSS attacks,
+* X-DNS-Prefetch-Control to disable browsers DNS prefetching.
+
+```js
+/**
+ * Helmet
+ */
+const express = require('express')
+const helmet = require('helmet')
+const app = express()
+
+app.use(helmet())
+```
+
+**2. JOI module:**
+
+Validating user input is one of the most important things to do when it comes to the security of your application. Failing to do it correctly can open up your application and users to a wide range of attacks, including command injection, SQL injection or stored cross-site scripting.
+
+To validate user input, one of the best libraries you can pick is joi. [Joi](https://www.npmjs.com/package/joi) is an object schema description language and validator for JavaScript objects.
+
+```js
+/**
+ * Joi
+ */
+const Joi = require('joi');
+
+const schema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+    access_token: [Joi.string(), Joi.number()],
+    birthyear: Joi.number().integer().min(1900).max(2013),
+    email: Joi.string().email()
+}).with('username', 'birthyear').without('password', 'access_token')
+
+// Return result
+const result = Joi.validate({
+    username: 'abc',
+    birthyear: 1994
+}, schema)
+// result.error === null -> valid
+```
+
+**3. Regular Expressions:**
+
+Regular Expressions are a great way to manipulate texts and get the parts that you need from them. However, there is an attack vector called Regular Expression Denial of Service attack, which exposes the fact that most Regular Expression implementations may reach extreme situations for specially crafted input, that cause them to work extremely slowly.
+
+The Regular Expressions that can do such a thing are commonly referred as Evil Regexes. These expressions contain:
+*grouping with repetition,
+*inside the repeated group:
+    *repetition, or
+    *alternation with overlapping  
+
+Examples of Evil Regular Expressions patterns:
+
+```js
+(a+)+
+([a-zA-Z]+)*
+(a|aa)+
+```
+
+**4. Security.txt:**
+
+Security.txt defines a standard to help organizations define the process for security researchers to securely disclose security vulnerabilities.
+
+```js
+const express = require('express')
+const securityTxt = require('express-security.txt')
+
+const app = express()
+
+app.get('/security.txt', securityTxt({
+  // your security address
+  contact: 'email@example.com',
+  // your pgp key
+  encryption: 'encryption',
+  // if you have a hall of fame for securty resourcers, include the link here
+  acknowledgements: 'http://acknowledgements.example.com'
+}))
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to handle file upload in Node.js?
+
+File can be uploaded to the server using Multer module. Multer is a Node.js middleware which is used for handling multipart/form-data, which is mostly used library for uploading files.
+
+**1. Installing the dependencies:**
+
+```js
+npm install express body-parser multer --save
+```
+
+**2. server.js:**
+
+```js
+/**
+ * File Upload in Node.js
+ */
+const express = require("express");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const app = express();
+
+// for text/number data transfer between clientg and server
+app.use(bodyParser());
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./uploads");
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "-" + Date.now());
+  },
+});
+
+const upload = multer({ storage: storage }).single("userPhoto");
+
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/index.html");
+});
+
+// POST: upload for single file upload
+app.post("/api/photo", function (req, res) {
+  upload(req, res, function (err) {
+    if (err) {
+      return res.end("Error uploading file.");
+    }
+    res.end("File is uploaded");
+  });
+});
+
+app.listen(3000, function () {
+  console.log("Listening on port 3000");
+});
+```
+
+**3. index.html:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Multer-File-Upload</title>
+</head>
+<body>
+    <h1>MULTER File Upload | Single File Upload</h1> 
+
+    <form id = "uploadForm"
+         enctype = "multipart/form-data"
+         action = "/api/photo"
+         method = "post"
+    >
+      <input type="file" name="userPhoto" />
+      <input type="submit" value="Upload Image" name="submit">
+    </form>
+</body>
+</html>
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
