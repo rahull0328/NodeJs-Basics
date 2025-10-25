@@ -1450,3 +1450,130 @@ Cluster supports two types of load distribution:
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How does the cluster module work in Node.js?
+
+The cluster module provides a way of creating child processes that runs simultaneously and share the same server port.
+
+Node.js runs single threaded programming, which is very memory efficient, but to take advantage of computers multi-core systems, the Cluster module allows you to easily create child processes that each runs on their own single thread, to handle the load.
+
+<p align="center">
+  <img src="assets/nodejs_cluster.png" alt="Load Balancer" width="400px" />
+</p>
+
+**Example:**
+
+```js
+/**
+ * Cluster Module
+ */
+const cluster = require("cluster");
+
+if (cluster.isMaster) {
+  console.log(`Master process is running...`);
+  cluster.fork();
+  cluster.fork();
+} else {
+  console.log(`Worker process started running`);
+}
+```
+
+**Output:**
+
+```js
+Master process is running...
+Worker process started running
+Worker process started running
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain cluster methods supported by Node.js?
+
+|Method         |Description            |
+|---------------|-----------------------|
+|fork()         |Creates a new worker, from a master|
+|isMaster       |Returns true if the current process is master, otherwise false|
+|isWorker       |Returns true if the current process is worker, otherwise false|
+|id             |A unique id for a worker|
+|process        |Returns the global Child Process|
+|send()         |sends a message to a master or a worker|
+|kill()         |Kills the current worker|
+|isDead         |Returns true if the worker\'s process is dead, otherwise false|
+|settings       |Returns an object containing the cluster\'s settings|
+|worker         |Returns the current worker object|
+|workers        |Returns all workers of a master|
+|exitedAfterDisconnect |Returns true if a worker was exited after disconnect, or the kill method|
+|isConnected    |Returns true if the worker is connected to its master, otherwise false|
+|disconnect()   |Disconnects all workers|
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to make use of all CPUs in Node.js?
+
+A single instance of Node.js runs in a single thread. To take advantage of multi-core systems, the user will sometimes want to launch a **cluster** of Node.js processes to handle the load. The cluster module allows easy creation of child processes that all share server ports.
+
+The cluster module supports two methods of distributing incoming connections.
+
+* The first one (and the default one on all platforms except Windows), is the round-robin approach, where the master process listens on a port, accepts new connections and distributes them across the workers in a round-robin fashion, with some built-in smarts to avoid overloading a worker process.
+
+* The second approach is where the master process creates the listen socket and sends it to interested workers. The workers then accept incoming connections directly.
+
+**Example:**
+
+```js
+/**
+ * Server Load Balancing in Node.js
+ */
+const cluster = require("cluster");
+const express = require("express");
+const os = require("os");
+
+if (cluster.isMaster) {
+  console.log(`Master PID ${process.pid} is running`);
+
+  // Get the number of available cpu cores
+  const nCPUs = os.cpus().length;
+  // Fork worker processes for each available CPU core
+  for (let i = 0; i < nCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    console.log(`Worker PID ${worker.process.pid} died`);
+  });
+} else {
+  // Workers can share any TCP connection
+  // In this case it is an Express server
+  const app = express();
+  app.get("/", (req, res) => {
+    res.send("Node is Running...");
+  });
+
+  app.listen(3000, () => {
+    console.log(`App listening at http://localhost:3000/`);
+  });
+
+  console.log(`Worker PID ${process.pid} started`);
+}
+```
+
+Running Node.js will now share port 3000 between the workers:
+
+**Output:**
+
+```js
+Master PID 13972 is running
+Worker PID 5680 started
+App listening at http://localhost:3000/
+Worker PID 14796 started
+...
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
