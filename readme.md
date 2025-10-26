@@ -1577,3 +1577,118 @@ Worker PID 14796 started
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. If Node.js is single threaded then how it handles concurrency?
+
+Node js despite being single-threaded is the asynchronous nature that makes it possible to handle concurrency and perform multiple I/O operations at the same time. Node js uses an event loop to maintain concurrency and perform non-blocking I/O operations.
+
+As soon as Node js starts, it initializes an event loop. The event loop works on a queue (which is called an event queue) and performs tasks in FIFO (First In First Out) order. It executes a task only when there is no ongoing task in the call stack. The call stack works in LIFO(Last In First Out) order. The event loop continuously checks the call stack to check if there is any task that needs to be run. Now whenever the event loop finds any function, it adds it to the stack and runs in order.  
+
+**Example:**
+
+```js
+/**
+ * Concurrency
+ */
+function add(a, b) {
+  return a + b;
+}
+
+function print(n) {
+  console.log(`Two times the number ${n} is ` + add(n, n));
+}
+
+print(5);
+```
+
+Here, the function **print(5)** will be invoked and will push into the call stack. When the function is called, it starts consoling the statement inside it but before consoling the whole statement it encounters another function add(n,n) and suspends its current execution, and pushes the add function into the top of the call stack.
+
+Now the function will return the addition **a+b** and then popped out from the stack and now the previously suspended function will start running and will log the output to console and then this function too will get pop from the stack and now the stack is empty. So this is how a call stack works.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to kill child processes that spawn their own child processes in Node.js?
+
+If a child process in Node.js spawn their own child processes, kill() method will not kill the child process\'s own child processes. For example, if I start a process that starts it\'s own child processes via child_process module, killing that child process will not make my program to quit.
+
+```js
+const spawn = require('child_process').spawn;
+const child = spawn('my-command');
+
+child.kill();
+```
+
+The program above will not quit if `my-command` spins up some more processes.
+
+**PID range hack:**
+
+We can start child processes with {detached: true} option so those processes will not be attached to main process but they will go to a new group of processes. Then using process.kill(-pid) method on main process we can kill all processes that are in the same group of a child process with the same pid group. In my case, I only have one processes in this group.
+
+```js
+const spawn = require('child_process').spawn;
+const child = spawn('my-command', {detached: true});
+
+process.kill(-child.pid);
+```
+
+Please note - before pid. This converts a pid to a group of pids for process kill() method.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is load balancer and how it works?
+
+A load balancer is a process that takes in HTTP requests and forwards these HTTP requests to one of a collection of servers. Load balancers are usually used for performance purposes: if a server needs to do a lot of work for each request, one server might not be enough, but 2 servers alternating handling incoming requests might.
+
+**1. Using cluster module:**
+
+NodeJS has a built-in module called Cluster Module to take the advantage of a multi-core system. Using this module you can launch NodeJS instances to each core of your system. Master process listening on a port to accept client requests and distribute across the worker using some intelligent fashion. So, using this module you can utilize the working ability of your system.
+
+**2. Using PM2:**
+
+PM2 is a production process manager for Node.js applications with a built-in load balancer. It allows you to keep applications alive forever, to reload them without the downtime and to facilitate common system admin tasks.
+
+```js
+$ pm2 start app.js -i max --name "Balancer"
+```
+
+This command will run the app.js file on the cluster mode to the total no of core available on your server.
+
+<p align="center">
+  <img src="assets/pm2-load-balancer.png" alt="Load Balancing using PM2" width="500px" />
+</p>
+
+**3. Using Express module:**
+
+The below code basically creates two Express Servers to handle the request
+
+```js
+const body = require('body-parser');
+const express = require('express');
+
+const app1 = express();
+const app2 = express();
+
+// Parse the request body as JSON
+app1.use(body.json());
+app2.use(body.json());
+
+const handler = serverNum => (req, res) => {
+  console.log(`server ${serverNum}`, req.method, req.url, req.body);
+  res.send(`Hello from server ${serverNum}!`);
+};
+
+// Only handle GET and POST requests
+app1.get('*', handler(1)).post('*', handler(1));
+app2.get('*', handler(2)).post('*', handler(2));
+
+app1.listen(3000);
+app2.listen(3001);
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
