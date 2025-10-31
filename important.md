@@ -1140,3 +1140,71 @@ const server = app.listen(3000, function () {
    console.log("App listening at http://%s:%s", host, port)
 })
 ```
+
+**Delete User:**
+
+```js
+const express = require('express');
+const app = express();
+const fs = require("fs");
+
+const id = 2;
+
+app.delete('/deleteUser', function (req, res) {
+   // First read existing users.
+   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
+      data = JSON.parse( data );
+      delete data["user" + 2];
+      console.log( data );
+      res.end( JSON.stringify(data));
+   });
+})
+
+const server = app.listen(3000, function () {
+   const host = server.address().address
+   const port = server.address().port
+   console.log("App listening at http://%s:%s", host, port)
+})
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is the difference between req.params and req.query?
+
+The **req.params** are a part of a path in URL and they\'re also known as URL variables. for example, if you have the route **/books/:id**, then the **id** property will be available as **req.params.id**. req.params default value is an empty object {}.
+
+A **req.query** is a part of a URL that assigns values to specified parameters. A query string commonly includes fields added to a base URL by a Web browser or other client application, for example as part of an HTML form. A query is the last part of URL
+
+**Example 01:** req.params
+
+```js
+/**
+ * req.params
+ */
+
+// GET  http://localhost:3000/employees/10
+
+app.get('/employees/:id', (req, res, next) => {
+   console.log(req.params.id); // 10
+})
+```
+
+**Example 02:** req.query
+
+```js
+/**
+ * req.query
+ */
+
+// GET  http://localhost:3000/employees?page=20
+
+app.get('/employees', (req, res, next) => {
+  console.log(req.query.page) // 20
+})
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
