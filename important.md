@@ -1208,3 +1208,123 @@ app.get('/employees', (req, res, next) => {
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How to implement a sleep function in Node.js?
+
+One way to delay execution of a function in Node.js is to use async/await with promises to delay execution without callbacks function. Just put the code you want to delay in the callback. For example, below is how you can wait 1 second before executing some code.
+
+**Example:**
+
+```js
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+async function run() {
+  await delay(1000);
+  console.log("This printed after about 1 second");
+}
+
+run();
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## # 6. NODE.JS FILE SYSTEM
+
+<br/>
+
+## Q. How Node.js read the content of a file?
+
+The "normal" way in Node.js is probably to read in the content of a file in a non-blocking, asynchronous way. That is, to tell Node to read in the file, and then to get a callback when the file-reading has been finished. That would allow us to handle several requests in parallel.
+
+Common use for the File System module:
+
+* Read files
+* Create files
+* Update files
+* Delete files
+* Rename files  
+
+**Example:** Read Files
+
+```html
+<!-- index.html -->
+<html>
+<body>
+  <h1>File Header</h1>
+  <p>File Paragraph.</p>
+</body>
+</html>
+```
+
+```js
+/**
+ * read_file.js
+ */
+const http = require('http');
+const fs = require('fs');
+
+http.createServer(function (req, res) {
+  fs.readFile('index.html', function(err, data) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+}).listen(3000);
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## # 7. NODE.JS STREAMS
+
+<br/>
+
+## Q. How many types of streams are present in node.js?
+
+Streams are objects that let you read data from a source or write data to a destination in continuous fashion.
+There are four types of streams
+
+* **Readable** − Stream which is used for read operation.
+* **Writable** − Stream which is used for write operation.
+* **Duplex** − Stream which can be used for both read and write operation.
+* **Transform** − A type of duplex stream where the output is computed based on input.  
+
+Each type of Stream is an EventEmitter instance and throws several events at different instance of times.  
+
+**Methods:**
+
+* **data** − This event is fired when there is data is available to read.
+* **end** − This event is fired when there is no more data to read.
+* **error** − This event is fired when there is any error receiving or writing data.
+* **finish** − This event is fired when all the data has been flushed to underlying system.
+
+**1. Reading from a Stream:**
+
+```js
+const fs = require("fs");
+let data = "";
+
+// Create a readable stream
+const readerStream = fs.createReadStream("file.txt");
+
+// Set the encoding to be utf8.
+readerStream.setEncoding("UTF8");
+
+// Handle stream events --> data, end, and error
+readerStream.on("data", function (chunk) {
+  data += chunk;
+});
+
+readerStream.on("end", function () {
+  console.log(data);
+});
+
+readerStream.on("error", function (err) {
+  console.log(err.stack);
+});
+```
