@@ -1989,3 +1989,93 @@ module.exports = controllers;
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. How microservices communicate with each other?
+
+Microservices are an architectural style and comprises of small modules/elements which are independent of each other. At times they are interdependent on other microservices or even a database. Breaking down applications into smaller elements brings scalability and efficiency to the structure.
+
+The microservices are distributed and communicate with each other by inter-service communication on network level. Each microservice has its own instance and process. Therefore, services must interact using an inter-service communication protocols like HTTP, gRPC or message brokers AMQP protocol.
+
+<p align="center">
+  <img src="assets/microservices-communication.png" alt="Microservices Communication" width="500px" />
+</p>
+
+Client and services communicate with each other with many different types of communication. Mainly, those types of communications can be classified in two axes.
+
+**1. Synchronous Communication:**
+
+The Synchronous communication is using HTTP or gRPC protocol for returning sync response. The client sends a request and waits for a response from the service. So that means client code block their thread, until the response reach from the server.
+
+**2. Asynchronous Communication:**
+
+In Asynchronous communication, the client sends a request but it doesn\'t wait for a response from the service. The most popular protocol for this Asynchronous communications is AMQP (Advanced Message Queuing Protocol). So with using AMQP protocols, the client sends the message with using message broker systems like Kafka and RabbitMQ queue. The message producer usually does not wait for a response. This message consume from the subscriber systems in async way, and no one waiting for response suddenly.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## # 10. NODE.JS MIDDLEWARE
+
+<br/>
+
+## Q. What are the middleware functions in Node.js?
+
+Middleware functions are functions that have access to the **request object (req)**, the **response object (res)**, and the `next` function in the application\'s request-response cycle.
+
+Middleware functions can perform the following tasks:
+
+* Execute any code.
+* Make changes to the request and the response objects.
+* End the request-response cycle.
+* Call the next middleware in the stack.
+
+If the current middleware function does not end the request-response cycle, it must call `next()` to pass control to the next middleware function. Otherwise, the request will be left hanging.
+
+The following figure shows the elements of a middleware function call:
+
+<p align="center">
+  <img src="assets/express-mw.png" alt="Middleware functions" width="800px" />
+</p>
+
+Middleware functions that return a Promise will call `next(value)` when they reject or throw an error. `next` will be called with either the rejected value or the thrown Error.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Explain the use of next in Node.js?
+
+The **next** is a function in the Express router which executes the middleware succeeding the current middleware.
+
+**Example:**
+
+To load the middleware function, call `app.use()`, specifying the middleware function. For example, the following code loads the **myLogger** middleware function before the route to the root path (/).
+
+```js
+/**
+ * myLogger
+ */
+const express = require("express");
+const app = express();
+
+const myLogger = function (req, res, next) {
+  console.log("LOGGED");
+  next();
+};
+
+app.use(myLogger);
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(3000);
+```
+
+**&#9885; [Try this example on CodeSandbox](https://codesandbox.io/s/next-function-nq042s)**
+
+*Note: The `next()` function is not a part of the Node.js or Express API, but is the third argument that is passed to the middleware function. The `next()` function could be named anything, but by convention it is always named “next”. To avoid confusion, always use this convention.*
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
