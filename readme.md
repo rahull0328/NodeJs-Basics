@@ -2079,3 +2079,77 @@ app.listen(3000);
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Why to use Express.js?
+
+Express.js is a Node.js web application framework that provides broad features for building web and mobile applications. It is used to build a single page, multipage, and hybrid web application.
+
+**Features of Express.js:**
+
+* **Fast Server-Side Development:** The features of node js help express saving a lot of time.
+* **Middleware:** Middleware is a request handler that has access to the application\'s request-response cycle.
+* **Routing:** It refers to how an application\'s endpoint\'s URLs respond to client requests.
+* **Templating:** It provides templating engines to build dynamic content on the web pages by creating HTML templates on the server.
+* **Debugging:** Express makes it easier as it identifies the exact part where bugs are.
+
+The Express.js framework makes it very easy to develop an application which can be used to handle multiple types of requests like the GET, PUT, and POST and DELETE requests.
+
+**Example:**
+
+```js
+/**
+ * Simple server using Express.js
+ */
+const express = require("express");
+const app = express();
+
+app.get("/", function (req, res) {
+  res.send("Hello World!");
+});
+
+const server = app.listen(3000, function () {});
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. Why should you separate Express 'app' and 'server'?
+
+Keeping the API declaration separated from the network related configuration (port, protocol, etc) allows testing the API in-process, without performing network calls, with all the benefits that it brings to the table: fast testing execution and getting coverage metrics of the code. It also allows deploying the same API under flexible and different network conditions.
+
+API declaration, should reside in app.js:
+
+```js
+/**
+ * app.js
+ */
+const app = express();
+
+app.use(bodyParser.json());
+app.use("/api/events", events.API);
+app.use("/api/forms", forms);
+```
+
+Server network declaration
+
+```js
+/**
+ * server.js
+ */
+const app = require('../app');
+const http = require('http');
+
+
+// Get port from environment and store in Express.
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+
+// Create HTTP server.
+const server = http.createServer(app);
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
