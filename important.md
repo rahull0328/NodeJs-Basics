@@ -1534,3 +1534,91 @@ Using the options object, this request uses the GET method to retrieve JSON data
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. What is difference between promises and async-await in Node.js?
+
+**1. Promises:**
+
+A promise is used to handle the asynchronous result of an operation. JavaScript is designed to not wait for an asynchronous block of code to completely execute before other synchronous parts of the code can run. With Promises, we can defer the execution of a code block until an async request is completed. This way, other operations can keep running without interruption.
+
+**States of Promises:**
+
+* `Pending`: Initial State, before the Promise succeeds or fails.
+* `Resolved`: Completed Promise
+* `Rejected`: Failed Promise, throw an error
+
+**Example:**
+
+```js
+function logFetch(url) {
+  return fetch(url)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(err => {
+      console.error('fetch failed', err);
+    });
+}
+```
+
+**2. Async-Await:**
+
+`Await` is basically syntactic sugar for **Promises**. It makes asynchronous code look more like synchronous/procedural code, which is easier for humans to understand.
+
+Putting the keyword `async` before a function tells the function to return a Promise. If the code returns something that is not a `Promise`, then JavaScript automatically wraps it into a resolved promise with that value. The `await` keyword simply makes JavaScript wait until that `Promise` settles and then returns its result.
+
+**Example:**
+
+```js
+function doubleAfter2Seconds(x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x * 2);
+    }, 2000);
+  });
+}
+
+async function addAsync(x) {
+  const a = await doubleAfter2Seconds(10);
+  const b = await doubleAfter2Seconds(20);
+  const c = await doubleAfter2Seconds(30);
+  return x + a + b + c;
+}
+
+
+addAsync(10).then((sum) => {
+  console.log(sum);
+});
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to perform get request using axios in nodejs?
+
+```js
+/**
+ * Get Request using Axios
+ */
+const express = require("express");
+const app = express();
+const axios = require("axios");
+
+app.get("/async", async (req, res) => {
+  try {
+    const response = await axios.get("https://jsonplaceholder.typicode.com/todos/1");
+    res.status(200).json(response.data);
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+app.listen(3000, function () {
+  console.log(`App listening at http://localhost:3000/`);
+});
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
