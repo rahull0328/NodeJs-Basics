@@ -2153,3 +2153,107 @@ const server = http.createServer(app);
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. What are some of the most popular packages of Node.js?
+
+| Package  | Description                                      |
+|----------|--------------------------------------------------|
+|async     | Async is a utility module which provides straight-forward, powerful functions for working with asynchronous JavaScript|
+|axios     |Axios is a promise-based HTTP Client for node.js and the browser.|
+|autocannon|AutoCannon is a tool for performance testing and a tool for benchmarking.|
+|browserify|Browserify will recursively analyze all the require() calls in your app in order to build a bundle you can serve up to the browser in a single `<script>` tag|
+|bower     |Bower is a package manager for the web It works by fetching and installing packages from all over, taking care of hunting, finding, downloading, and saving the stuff you\'re looking for|
+|csv       |csv module has four sub modules which provides CSV generation, parsing, transformation and serialization for Node.js|
+|debug     |Debug is a tiny node.js debugging utility modelled after node core\'s debugging technique|
+|express   |Express is a fast, un-opinionated, minimalist web framework. It provides small, robust tooling for HTTP servers, making it a great solution for single page applications, web sites, hybrids, or public HTTP APIs|
+|grunt     |is a JavaScript Task Runner that facilitates creating new projects and makes performing repetitive but necessary tasks such as linting, unit testing, concatenating and minifying files (among other things) trivial|
+|http-server|is a simple, zero-configuration command-line http server. It is powerful enough for production usage, but it\'s simple and hackable enough to be used for testing, local development, and learning|
+|inquirer  |A collection of common interactive command line user interfaces|
+|jshint    |Static analysis tool to detect errors and potential problems in JavaScript code and to enforce your team\'s coding conventions|
+|koa       |Koa is web app framework. It is an expressive HTTP middleware for node.js to make web applications and APIs more enjoyable to write|
+|lodash    |The lodash library exported as a node module. Lodash is a modern JavaScript utility library delivering modularity, performance, & extras|
+|less      |The less library exported as a node module|
+|moment    |A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates|
+|mongoose  |It is a MongoDB object modeling tool designed to work in an asynchronous environment|
+|mongoDB   |The official MongoDB driver for Node.js. It provides a high-level API on top of mongodb-core that is meant for end users|
+|nodemon   |It is a simple monitor script for use during development of a node.js app, It will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application|
+|nodemailer|This module enables e-mail sending from a Node.js applications|
+|passport  |A simple, unobtrusive authentication middleware for Node.js. Passport uses the strategies to authenticate requests. Strategies can range from verifying username and password credentials or authentication using OAuth or OpenID|
+|socket.io |Its a node.js realtime framework server|
+|sails     |Sails is a API-driven framework for building realtime apps, using MVC conventions (based on Express and Socket.io)|
+|underscore|Underscore.js is a utility-belt library for JavaScript that provides support for the usual functional suspects (each, map, reduce, filter...) without extending any core JavaScript objects|
+|validator |A nodejs module for a library of string validators and sanitizers|
+|winston   |A multi-transport async logging library for Node.js|
+|ws        |A simple to use, blazing fast and thoroughly tested websocket client, server and console for node.js|
+|xml2js    |A Simple XML to JavaScript object converter|
+|yo        |A CLI tool for running Yeoman generators|
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How can you make sure your dependencies are safe?
+
+The only option is to automate the update / security audit of your dependencies. For that there are free and paid options:
+
+1. npm outdated
+2. Trace by RisingStack
+3. NSP
+4. GreenKeeper
+5. Snyk
+6. npm audit
+7. npm audit fix
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are the security mechanisms available in Node.js?
+
+**1. Helmet module:**
+
+[Helmet](https://www.npmjs.com/package/helmet) helps to secure your Express applications by setting various HTTP headers, like:
+
+* X-Frame-Options to mitigates clickjacking attacks,
+* Strict-Transport-Security to keep your users on HTTPS,
+* X-XSS-Protection to prevent reflected XSS attacks,
+* X-DNS-Prefetch-Control to disable browsers DNS prefetching.
+
+```js
+/**
+ * Helmet
+ */
+const express = require('express')
+const helmet = require('helmet')
+const app = express()
+
+app.use(helmet())
+```
+
+**2. JOI module:**
+
+Validating user input is one of the most important things to do when it comes to the security of your application. Failing to do it correctly can open up your application and users to a wide range of attacks, including command injection, SQL injection or stored cross-site scripting.
+
+To validate user input, one of the best libraries you can pick is joi. [Joi](https://www.npmjs.com/package/joi) is an object schema description language and validator for JavaScript objects.
+
+```js
+/**
+ * Joi
+ */
+const Joi = require('joi');
+
+const schema = Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+    access_token: [Joi.string(), Joi.number()],
+    birthyear: Joi.number().integer().min(1900).max(2013),
+    email: Joi.string().email()
+}).with('username', 'birthyear').without('password', 'access_token')
+
+// Return result
+const result = Joi.validate({
+    username: 'abc',
+    birthyear: 1994
+}, schema)
+// result.error === null -> valid
+```
