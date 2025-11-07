@@ -2254,3 +2254,73 @@ const result = Joi.validate({
 }, schema)
 // result.error === null -> valid
 ```
+
+**3. Regular Expressions:**
+
+Regular Expressions are a great way to manipulate texts and get the parts that you need from them. However, there is an attack vector called Regular Expression Denial of Service attack, which exposes the fact that most Regular Expression implementations may reach extreme situations for specially crafted input, that cause them to work extremely slowly.
+
+The Regular Expressions that can do such a thing are commonly referred as Evil Regexes. These expressions contain:
+*grouping with repetition,
+*inside the repeated group:
+    *repetition, or
+    *alternation with overlapping  
+
+Examples of Evil Regular Expressions patterns:
+
+```js
+(a+)+
+([a-zA-Z]+)*
+(a|aa)+
+```
+
+**4. Security.txt:**
+
+Security.txt defines a standard to help organizations define the process for security researchers to securely disclose security vulnerabilities.
+
+```js
+const express = require('express')
+const securityTxt = require('express-security.txt')
+
+const app = express()
+
+app.get('/security.txt', securityTxt({
+  // your security address
+  contact: 'email@example.com',
+  // your pgp key
+  encryption: 'encryption',
+  // if you have a hall of fame for securty resourcers, include the link here
+  acknowledgements: 'http://acknowledgements.example.com'
+}))
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What is npm in Node.js?
+
+NPM stands for Node Package Manager. It provides following two main functionalities.
+
+* It works as an Online repository for node.js packages/modules which are present at <nodejs.org>.
+* It works as Command line utility to install packages, do version management and dependency management of Node.js packages.
+NPM comes bundled along with Node.js installable. We can verify its version using the following command-
+
+```js
+npm --version
+```
+
+NPM helps to install any Node.js module using the following command.
+
+```js
+npm install <Module Name>
+```
+
+For example, following is the command to install a famous Node.js web framework module called express-
+
+```js
+npm install express
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
