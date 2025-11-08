@@ -2324,3 +2324,100 @@ npm install express
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Why npm shrinkwrap is useful?
+
+NPM shrinkwrap lets you lock down the ver­sions of installed pack­ages and their descen­dant pack­ages. It helps you use same package versions on all environments (development, staging, production) and also improve download and installation speed.
+
+After installing packages using npm install or npm install `<package-name>` and updating your **node_modules** folder, you should run
+
+```js
+npm shrinkwrap
+```
+
+It should create new **npm-shrinkwrap.json** file with information about all packages you use. Next time, when someone calls **npm install**, it will install packages from **npm-shrinkwrap.json** and you will have the same environment on all machines.
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to handle file upload in Node.js?
+
+File can be uploaded to the server using Multer module. Multer is a Node.js middleware which is used for handling multipart/form-data, which is mostly used library for uploading files.
+
+**1. Installing the dependencies:**
+
+```js
+npm install express body-parser multer --save
+```
+
+**2. server.js:**
+
+```js
+/**
+ * File Upload in Node.js
+ */
+const express = require("express");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const app = express();
+
+// for text/number data transfer between clientg and server
+app.use(bodyParser());
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./uploads");
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "-" + Date.now());
+  },
+});
+
+const upload = multer({ storage: storage }).single("userPhoto");
+
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + "/index.html");
+});
+
+// POST: upload for single file upload
+app.post("/api/photo", function (req, res) {
+  upload(req, res, function (err) {
+    if (err) {
+      return res.end("Error uploading file.");
+    }
+    res.end("File is uploaded");
+  });
+});
+
+app.listen(3000, function () {
+  console.log("Listening on port 3000");
+});
+```
+
+**3. index.html:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Multer-File-Upload</title>
+</head>
+<body>
+    <h1>MULTER File Upload | Single File Upload</h1> 
+
+    <form id = "uploadForm"
+         enctype = "multipart/form-data"
+         action = "/api/photo"
+         method = "post"
+    >
+      <input type="file" name="userPhoto" />
+      <input type="submit" value="Upload Image" name="submit">
+    </form>
+</body>
+</html>
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
