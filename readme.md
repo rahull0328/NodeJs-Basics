@@ -2421,3 +2421,110 @@ app.listen(3000, function () {
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. Explain the terms body-parser, cookie-parser, morgan, nodemon, pm2, serve-favicon, cors, dotenv, fs-extra, moment in Express.js?
+
+**1. body-parser:**
+
+`body-parser` extract the entire body portion of an incoming request stream and exposes it on `req.body`. The body-parser module parses the JSON, buffer, string and URL encoded data submitted using HTTP POST request.
+
+**Example:**
+
+```js
+npm install body-parser
+```
+
+```js
+/**
+ * body-parser
+ */
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+// create application/json parser
+const jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+// POST /login gets urlencoded bodies
+app.post("/login", urlencodedParser, function (req, res) {
+  res.send("welcome, " + req.body.username);
+});
+
+// POST /api/users gets JSON bodies
+app.post("/api/users", jsonParser, function (req, res) {
+  // create user in req.body
+});
+```
+
+**2. cookie-parser:**
+
+A cookie is a piece of data that is sent to the client-side with a request and is stored on the client-side itself by the Web Browser the user is currently using.
+
+The `cookie-parser` middleware\'s cookieParser function takes a `secret` string or array of strings as the first argument and an `options` object as the second argument.
+
+**Installation:**
+
+```js
+npm install cookie-parser
+```
+
+**Example:**
+
+```js
+/**
+ * cookie-parser
+ */
+const express = require('express')
+const cookieParser = require('cookie-parser')
+
+const app = express()
+app.use(cookieParser())
+
+app.get('/', function (req, res) {
+  // Cookies that have not been signed
+  console.log('Cookies: ', req.cookies)
+
+  // Cookies that have been signed
+  console.log('Signed Cookies: ', req.signedCookies)
+})
+
+app.listen(3000)
+```
+
+**3. morgan:**
+
+HTTP request logger middleware for node.js.
+
+**Installation:**
+
+```js
+npm install morgan
+```
+
+**Example:**
+
+```js
+/**
+ * Writing logs to a file
+ */
+const express = require('express')
+const fs = require('fs')
+const morgan = require('morgan')
+const path = require('path')
+
+const app = express()
+
+// create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+// setup the logger
+app.use(morgan('combined', { stream: accessLogStream }))
+
+app.get('/', function (req, res) {
+  res.send('hello, world!')
+})
+```
