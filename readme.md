@@ -2528,3 +2528,73 @@ app.get('/', function (req, res) {
   res.send('hello, world!')
 })
 ```
+
+**4. nodemon:**
+
+Nodemon is a utility that will monitor for any changes in source and automatically restart your server.
+
+**Installation:**
+
+```js
+npm install -g nodemon
+```
+
+**Example:**
+
+```js
+{
+  // ...
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  // ...
+}
+```
+
+**5. pm2:**
+
+**P**(rocess) **M**(anager) **2** (pm2) is a production process manager for Node.js applications with a built-in load balancer. It allows to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks.
+
+**Installation:**
+
+```js
+npm install pm2 -g
+```
+
+**Start an application:**
+
+```js
+pm2 start app.js
+```
+
+**Reference:**
+
+* *[https://pm2.keymetrics.io/docs/usage/quick-start/](https://pm2.keymetrics.io/docs/usage/quick-start/)*
+
+**6. serve-favicon:**
+
+Node.js middleware for serving a favicon. It create new middleware to serve a favicon from the given path to a favicon file. **path** may also be a Buffer of the icon to serve.
+
+**Installation:**
+
+```js
+npm install serve-favicon
+```
+
+**Example:**
+
+```js
+/**
+ * serve-favicon
+ */
+const express = require('express')
+const favicon = require('serve-favicon')
+const path = require('path')
+
+const app = express()
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+
+// Add your routes here, etc.
+
+app.listen(3000)
+```
