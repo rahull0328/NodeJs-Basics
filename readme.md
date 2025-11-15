@@ -2598,3 +2598,136 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 app.listen(3000)
 ```
+
+**7. cors:**
+
+**C**ross-**O**rigin **R**esource **S**haring (CORS) headers allow apps running in the browser to make requests to servers on different domains (also known as origins). CORS headers are set on the server side - the HTTP server is responsible for indicating that a given HTTP request can be cross-origin.
+
+**Installation:**
+
+```js
+npm install cors
+```
+
+**Example:**
+
+```js
+/**
+ * Enable CORS for a Single Route
+ */
+const express = require('express')
+const cors = require('cors')
+const app = express()
+
+app.get('/products/:id', cors(), function (req, res, next) {
+  res.json({msg: 'This is CORS-enabled for a Single Route'})
+})
+
+app.listen(8080, function () {
+  console.log('CORS-enabled web server listening on port 80')
+})
+```
+
+**8. dotenv:**
+
+When a NodeJs application runs, it injects a global variable called `process.env` which contains information about the state of environment in which the application is running. The `dotenv` loads environment variables stored in the `.env` file into `process.env`.
+
+**Installation:**
+
+```js
+npm install dotenv
+```
+
+**Usage:**
+
+```js
+// .env
+
+DB_HOST=localhost
+DB_USER=admin
+DB_PASS=root
+```
+
+```js
+/**
+ * config.js
+ */
+const db = require('db')
+
+db.connect({
+  host: process.env.DB_HOST,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS
+})
+```
+
+**9. fs-extra:**
+
+`fs-extra` contains methods that aren\'t included in the vanilla Node.js fs package. Such as recursive `mkdir`, `copy`, and `remove`. It also uses graceful-fs to prevent `EMFILE` errors.
+
+**Installation:**
+
+```js
+npm install fs-extra
+```
+
+**Usage:**
+
+```js
+/**
+ * fs-extra
+ */
+const fs = require('fs-extra')
+
+// Async with callbacks:
+fs.copy('/tmp/myfile', '/tmp/mynewfile', err => {
+  if (err) return console.error(err)
+  console.log('success!')
+})
+```
+
+**10. moment:**
+
+A JavaScript date library for parsing, validating, manipulating, and formatting dates.
+
+**Installation:**
+
+```js
+npm install moment --save
+```
+
+**Usage:**
+
+* Format Dates
+
+```js
+const moment = require('moment');
+
+moment().format('MMMM Do YYYY, h:mm:ss a'); // October 24th 2022, 3:15:22 pm
+moment().format('dddd');                    // Saturday
+moment().format("MMM Do YY");               // Oct 24th 22
+```
+
+* Relative Time
+
+```js
+const moment = require('moment');
+
+moment("20111031", "YYYYMMDD").fromNow(); // 9 years ago
+moment("20120620", "YYYYMMDD").fromNow(); // 8 years ago
+moment().startOf('day').fromNow();        // 15 hours ago
+```
+
+* Calendar Time
+
+```js
+const moment = require('moment');
+
+moment().subtract(10, 'days').calendar(); // 10/14/2022
+moment().subtract(6, 'days').calendar();  // Last Sunday at 3:18 PM
+moment().subtract(3, 'days').calendar();  // Last Wednesday at 3:18 PM
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
