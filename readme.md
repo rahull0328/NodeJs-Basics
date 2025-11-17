@@ -2731,3 +2731,131 @@ moment().subtract(3, 'days').calendar();  // Last Wednesday at 3:18 PM
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## # 11. NODE.JS RESTFUL API
+
+<br/>
+
+## Q. Explain RESTful Web Services in Node.js?
+
+REST stands for REpresentational State Transfer. REST is web standards based architecture and uses HTTP Protocol.
+It is an architectural style as well as an approach for communications purposes that is often used in various web services development. A REST Server simply provides access to resources and REST client accesses and modifies the resources using HTTP protocol.
+
+**HTTP methods:**
+
+* `GET` − Provides read-only access to a resource.
+* `PUT` − Updates an existing resource or creates a new resource.
+* `DELETE` − Removes a resource.
+* `POST` − Creates a new resource.
+* `PATCH`− Update/modify a resource
+
+**Example:** users.json
+
+```json
+{
+   "user1" : {
+      "id": 1,
+      "name" : "Ehsan Philip",
+      "age" : 24
+   },
+
+   "user2" : {
+      "id": 2,
+      "name" : "Karim Jimenez",
+      "age" : 22
+   },
+
+   "user3" : {
+      "id": 3,
+      "name" : "Giacomo Weir",
+      "age" : 18
+   }
+}
+```
+
+**List Users** ( `GET` method)
+
+Let\'s implement our first RESTful API listUsers using the following code in a server.js file −
+
+```js
+const express = require('express');
+const app = express();
+const fs = require("fs");
+
+app.get('/listUsers', function (req, res) {
+   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
+      console.log( data );
+      res.end( data );
+   });
+})
+
+const server = app.listen(3000, function () {
+   const host = server.address().address
+   const port = server.address().port
+   console.log("App listening at http://%s:%s", host, port)
+});
+```
+
+**Add User** ( `POST` method )
+
+Following API will show you how to add new user in the list. 
+
+```js
+const express = require('express');
+const app = express();
+const fs = require("fs");
+
+const user = {
+   "user4" : {
+      "id": 4,
+      "name" : "Spencer Amos",
+      "age" : 28
+   }
+}
+
+app.post('/addUser', function (req, res) {
+   // First read existing users.
+   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
+      data = JSON.parse( data );
+      data["user4"] = user["user4"];
+      console.log( data );
+      res.end( JSON.stringify(data));
+   });
+})
+
+const server = app.listen(3000, function () {
+   const host = server.address().address
+   const port = server.address().port
+   console.log("App listening at http://%s:%s", host, port)
+})
+```
+
+**Delete User:**
+
+```js
+const express = require('express');
+const app = express();
+const fs = require("fs");
+
+const id = 2;
+
+app.delete('/deleteUser', function (req, res) {
+   // First read existing users.
+   fs.readFile( __dirname + "/" + "users.json", 'utf8', function (err, data) {
+      data = JSON.parse( data );
+      delete data["user" + 2];
+      console.log( data );
+      res.end( JSON.stringify(data));
+   });
+})
+
+const server = app.listen(3000, function () {
+   const host = server.address().address
+   const port = server.address().port
+   console.log("App listening at http://%s:%s", host, port)
+})
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
