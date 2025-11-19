@@ -2859,3 +2859,102 @@ const server = app.listen(3000, function () {
 <div align="right">
     <b><a href="#table-of-contents">↥ back to top</a></b>
 </div>
+
+## Q. What is the difference between req.params and req.query?
+
+The **req.params** are a part of a path in URL and they\'re also known as URL variables. for example, if you have the route **/books/:id**, then the **id** property will be available as **req.params.id**. req.params default value is an empty object {}.
+
+A **req.query** is a part of a URL that assigns values to specified parameters. A query string commonly includes fields added to a base URL by a Web browser or other client application, for example as part of an HTML form. A query is the last part of URL
+
+**Example 01:** req.params
+
+```js
+/**
+ * req.params
+ */
+
+// GET  http://localhost:3000/employees/10
+
+app.get('/employees/:id', (req, res, next) => {
+   console.log(req.params.id); // 10
+})
+```
+
+**Example 02:** req.query
+
+```js
+/**
+ * req.query
+ */
+
+// GET  http://localhost:3000/employees?page=20
+
+app.get('/employees', (req, res, next) => {
+  console.log(req.query.page) // 20
+})
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. How to make post request in Node.js?
+
+Following code snippet can be used to make a Post Request in Node.js.
+
+```js
+/**
+ * POST Request
+ */
+const request = require("request");
+
+request.post("http://localhost:3000/action",  { form: { key: "value" } },
+  function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      console.log(body);
+    }
+  }
+);
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
+
+## Q. What are Promises in Node.js?
+
+It allows to associate handlers to an asynchronous action\'s eventual success value or failure reason. This lets asynchronous methods return values like synchronous methods: instead of the final value, the asynchronous method returns a promise for the value at some point in the future.
+
+Promises in node.js promised to do some work and then had separate callbacks that would be executed for success and failure as well as handling timeouts. Another way to think of promises in node.js was that they were emitters that could emit only two events: success and error.The cool thing about promises is you can combine them into dependency chains (do Promise C only when Promise A and Promise B complete).
+
+The core idea behind promises is that a promise represents the result of an asynchronous operation. A promise is in one of three different states:
+
+* pending - The initial state of a promise.
+* fulfilled - The state of a promise representing a successful operation.
+* rejected - The state of a promise representing a failed operation.
+Once a promise is fulfilled or rejected, it is immutable (i.e. it can never change again).  
+
+**Example:**
+
+```js
+/**
+ * Promise
+ */
+function getSum(num1, num2) {
+  const myPromise = new Promise((resolve, reject) => {
+    if (!isNaN(num1) && !isNaN(num2)) {
+      resolve(num1 + num2);
+    } else {
+      reject(new Error("Not a valid number"));
+    }
+  });
+
+  return myPromise;
+}
+
+console.log(getSum(10, 20)); // Promise { 30 }
+```
+
+<div align="right">
+    <b><a href="#table-of-contents">↥ back to top</a></b>
+</div>
